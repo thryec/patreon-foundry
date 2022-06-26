@@ -3,7 +3,6 @@ pragma solidity ^0.8.13;
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "forge-std/console2.sol";
 
 contract Patreon is ReentrancyGuard {
     //------------------- Variables ------------------- //
