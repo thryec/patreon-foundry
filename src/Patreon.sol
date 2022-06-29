@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
+import "../CreatorList.sol";
 import "openzeppelin-contracts/contracts/security/ReentrancyGuard.sol";
 import "openzeppelin-contracts/contracts/utils/Counters.sol";
 
-contract Patreon is ReentrancyGuard {
+contract Patreon is ReentrancyGuard, CreatorList {
     //------------------- Variables ------------------- //
     mapping(uint256 => Stream) public streams; // maps streamIds to stream
 

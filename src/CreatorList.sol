@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import "openzeppelin-contracts/contracts/utils/cryptography/MerkleProof.sol";
 import "openzeppelin-contracts/contracts/access/Ownable.sol";
 
-contract CreatorWhitelist is Ownable {
+contract CreatorList is Ownable {
     // public mint
     bytes32 public creatorListMerkleRoot;
 
@@ -29,9 +29,9 @@ contract CreatorWhitelist is Ownable {
     function _verify(
         bytes32[] memory proof,
         bytes32 addressHash,
-        bytes32 whitelistMerkleRoot
+        bytes32 creatorListMerkleRoot
     ) internal pure returns (bool) {
-        return MerkleProof.verify(proof, whitelistMerkleRoot, addressHash);
+        return MerkleProof.verify(proof, creatorListMerkleRoot, addressHash);
     }
 
     function _hash(address _address) internal pure returns (bytes32) {
@@ -45,7 +45,7 @@ contract CreatorWhitelist is Ownable {
     modifier onlyCreatorList(bytes32[] memory proof) {
         require(
             _verifyPublicSender(proof),
-            "CreatorWhitelist: Caller is not whitelisted"
+            "CreatorList: Caller is not on the Creator List"
         );
         _;
     }
