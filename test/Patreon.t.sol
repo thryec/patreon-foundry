@@ -6,7 +6,11 @@ import "ds-test/test.sol";
 import "forge-std/Test.sol";
 
 contract PatreonTest is DSTest {
-    function setUp() public {}
+    Patreon patreon;
+
+    function setUp() public {
+        patreon = new Patreon();
+    }
 
     function testExample() public {
         assertTrue(true);
