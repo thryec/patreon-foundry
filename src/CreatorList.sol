@@ -29,9 +29,9 @@ contract CreatorList is Ownable {
     function _verify(
         bytes32[] memory proof,
         bytes32 addressHash,
-        bytes32 creatorListMerkleRoot
+        bytes32 creatorMerkleRoot
     ) internal pure returns (bool) {
-        return MerkleProof.verify(proof, creatorListMerkleRoot, addressHash);
+        return MerkleProof.verify(proof, creatorMerkleRoot, addressHash);
     }
 
     function _hash(address _address) internal pure returns (bytes32) {
@@ -44,7 +44,7 @@ contract CreatorList is Ownable {
 
     modifier onlyCreatorList(bytes32[] memory proof) {
         require(
-            _verifyPublicSender(proof),
+            _verifyMsgSender(proof),
             "CreatorList: Caller is not on the Creator List"
         );
         _;
