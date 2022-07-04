@@ -13,8 +13,8 @@ contract PatreonTest is DSTest {
     Vm internal vm;
     Utilities internal utils;
 
-    address internal ada = payable(address(0xada));
-    address internal bob = address(0xb0b);
+    address alice = address(0x1);
+    address bob = address(0x2);
 
     function setUp() public {
         patreon = new Patreon();
@@ -22,9 +22,9 @@ contract PatreonTest is DSTest {
     }
 
     function testTipETH() public {
-        utils.createUsers(2);
-        console.log("ada balance", address(ada).balance);
-        // vm.prank(ada);
+        console.log("alice address", alice);
+
+        // vm.prank(alice);
         // patreon.tipETH(address(1));
         // assert(condit);
     }
