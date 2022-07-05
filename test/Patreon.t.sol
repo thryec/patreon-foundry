@@ -3,13 +3,11 @@ pragma solidity ^0.8.13;
 
 import "../src/Patreon.sol";
 import "forge-std/Test.sol";
-import {DSTest} from "ds-test/test.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {console} from "forge-std/console.sol";
 
-contract PatreonTest is DSTest {
+contract PatreonTest is Test {
     Patreon internal patreon;
-    Vm internal immutable vm = Vm(HEVM_ADDRESS);
 
     address alice = address(0x1);
     address bob = address(0x2);
@@ -29,29 +27,29 @@ contract PatreonTest is DSTest {
         patreon.createETHStream{value: depositAmount}(bob, 1, 100);
     }
 
-    function testStreamETHRequiresNonZeroReceiver() public {}
+    // function testStreamETHRequiresNonZeroReceiver() public {}
 
-    function testStreamETHRequiresReceiverNotContract() public {}
+    // function testStreamETHRequiresReceiverNotContract() public {}
 
-    function testStreamETHRequiresReceiverNotSender() public {}
+    // function testStreamETHRequiresReceiverNotSender() public {}
 
-    function testStreamETHRequiresDepositNotZero() public {}
+    // function testStreamETHRequiresDepositNotZero() public {}
 
     //------------------- Withdrawing From ETH Stream ------------------- //
 
-    function testWithdrawFromStream() public {}
+    // function testWithdrawFromStream() public {}
 
-    function testWithdrawFromStreamRequiresReceiver() public {}
+    // function testWithdrawFromStreamRequiresReceiver() public {}
 
-    function testWithdrawFromStreamRequiresStreamExists() public {}
+    // function testWithdrawFromStreamRequiresStreamExists() public {}
 
     //------------------- Cancelling ETH Stream ------------------- //
 
-    function testCancelStream() public {}
+    // function testCancelStream() public {}
 
-    function testCancelStreamRequiresSender() public {}
+    // function testCancelStreamRequiresSender() public {}
 
-    function testCancelStreamRequiresStreamExists() public {}
+    // function testCancelStreamRequiresStreamExists() public {}
 
     //------------------- Tipping ETH ------------------- //
 
@@ -69,9 +67,9 @@ contract PatreonTest is DSTest {
 
     //------------------- Reading Contract Values ------------------- //
 
-    function testGetStreamInfoById() public {}
+    // function testGetStreamInfoById() public {}
 
-    function testGetCurrentETHBalance() public {}
+    // function testGetCurrentETHBalance() public {}
 
-    function testGetTimePassedInStream() public {}
+    // function testGetTimePassedInStream() public {}
 }
