@@ -21,6 +21,7 @@ Level 3 (-vvv): Stack traces for failing tests are also displayed.
 Level 4 (-vvvv): Stack traces for all tests are displayed, and setup traces for failing tests are displayed.
 Level 5 (-vvvvv): Stack traces and setup traces are always displayed.
 
-### sample foundry repositories
+### Sample foundry repositories
 
 https://github.com/yieldprotocol/vault-v2
+https://github.com/smartcontractkit/foundry-starter-kit
