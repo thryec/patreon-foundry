@@ -168,48 +168,57 @@ contract PatreonTest is Test {
 
     //------------------- Withdrawing From ETH Stream ------------------- //
 
-    function testWithdrawFromStream() public {
+    // function testWithdrawFromStream() public {
+    //     uint256 streamId = createStreamForTesting();
+    //     vm.warp(501);
+    //     vm.startPrank(bob);
+
+    //     uint256 firstWithdrawal = patreon.currentETHBalanceOf(streamId, bob);
+    //     patreon.recipientWithdrawFromStream(streamId, firstWithdrawal);
+    //     assertEq(bob.balance, 105 ether);
+
+    //     vm.warp(601);
+    //     uint256 secondWithdrawal = patreon.currentETHBalanceOf(streamId, bob);
+    //     patreon.recipientWithdrawFromStream(streamId, secondWithdrawal);
+    //     assertEq(bob.balance, 106 ether);
+    // }
+
+    // function testWithdrawFromStreamRequiresNonZeroAmount() public {
+    //     uint256 streamId = createStreamForTesting();
+    //     vm.prank(bob);
+    //     vm.expectRevert(bytes("amount is zero"));
+    //     patreon.recipientWithdrawFromStream(streamId, 0);
+    // }
+
+    // function testWithdrawFromStreamRequiresAmountLessThanBalance() public {
+    //     uint256 streamId = createStreamForTesting();
+    //     vm.prank(bob);
+    //     vm.expectRevert(bytes("amount exceeds the available balance"));
+    //     patreon.recipientWithdrawFromStream(streamId, 11 ether);
+    // }
+
+    // function testWithdrawFromStreamRequiresReceiver() public {
+    //     uint256 streamId = createStreamForTesting();
+    //     vm.prank(alice);
+    //     vm.expectRevert(bytes("caller is not the recipient of the stream"));
+    //     patreon.recipientWithdrawFromStream(streamId, 5 ether);
+    // }
+
+    // function testWithdrawFromStreamRequiresStreamExists() public {
+    //     uint256 fakeStreamId = 0;
+    //     vm.warp(501);
+    //     vm.prank(bob);
+    //     vm.expectRevert(bytes("stream does not exist"));
+    //     patreon.recipientWithdrawFromStream(fakeStreamId, 5 ether);
+    // }
+
+    function testWithdrawEmitsEvent() public {
         uint256 streamId = createStreamForTesting();
+        vm.expectEmit(true, true, true, true);
         vm.warp(501);
-        vm.startPrank(bob);
-
-        uint256 firstWithdrawal = patreon.currentETHBalanceOf(streamId, bob);
-        patreon.recipientWithdrawFromStream(streamId, firstWithdrawal);
-        assertEq(bob.balance, 105 ether);
-
-        vm.warp(601);
-        uint256 secondWithdrawal = patreon.currentETHBalanceOf(streamId, bob);
-        patreon.recipientWithdrawFromStream(streamId, secondWithdrawal);
-        assertEq(bob.balance, 106 ether);
-    }
-
-    function testWithdrawFromStreamRequiresNonZeroAmount() public {
-        uint256 streamId = createStreamForTesting();
+        emit RecipientWithdrawFromStream(streamId, bob, 5 ether);
         vm.prank(bob);
-        vm.expectRevert(bytes("amount is zero"));
-        patreon.recipientWithdrawFromStream(streamId, 0);
-    }
-
-    function testWithdrawFromStreamRequiresAmountLessThanBalance() public {
-        uint256 streamId = createStreamForTesting();
-        vm.prank(bob);
-        vm.expectRevert(bytes("amount exceeds the available balance"));
-        patreon.recipientWithdrawFromStream(streamId, 11 ether);
-    }
-
-    function testWithdrawFromStreamRequiresReceiver() public {
-        uint256 streamId = createStreamForTesting();
-        vm.prank(alice);
-        vm.expectRevert(bytes("caller is not the recipient of the stream"));
         patreon.recipientWithdrawFromStream(streamId, 5 ether);
-    }
-
-    function testWithdrawFromStreamRequiresStreamExists() public {
-        uint256 fakeStreamId = 0;
-        vm.warp(501);
-        vm.prank(bob);
-        vm.expectRevert(bytes("stream does not exist"));
-        patreon.recipientWithdrawFromStream(fakeStreamId, 5 ether);
     }
 
     //------------------- Cancelling ETH Stream ------------------- //
