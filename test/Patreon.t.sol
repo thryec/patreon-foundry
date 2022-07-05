@@ -214,13 +214,27 @@ contract PatreonTest is Test {
     //     assertEq(createdStream.ratePerSecond, rate);
     // }
 
-    function testGetCurrentETHBalanceOfRecipient() public {
+    // function testGetCurrentETHBalanceOfRecipient() public {
+    //     uint256 streamId = createStreamForTesting();
+    //     vm.warp(501);
+    //     uint256 currentBalance = patreon.currentETHBalanceOf(streamId, bob);
+    //     assertEq(currentBalance, 5 ether);
+    // }
+
+    function testGetCurrentETHBalanceOfSender() public {
         uint256 streamId = createStreamForTesting();
         vm.warp(501);
-        uint256 currentBalance = patreon.currentETHBalanceOf(streamId, bob);
-        console.log("recipient current balance", currentBalance);
+        uint256 currentBalance = patreon.currentETHBalanceOf(streamId, alice);
         assertEq(currentBalance, 5 ether);
     }
+
+    // function testGetETHBalanceMultipleWithdrawals() public {
+    //     uint256 streamId = createStreamForTesting();
+    //     vm.warp(501);
+    //     uint256 currentBalance = patreon.currentETHBalanceOf(streamId, bob);
+    //     console.log("recipient current balance", currentBalance);
+    //     assertEq(currentBalance, 5 ether);
+    // }
 
     // function testGetTimePassedInStream() public {
     //     uint256 streamId = createStreamForTesting();
