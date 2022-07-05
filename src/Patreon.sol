@@ -182,7 +182,6 @@ contract Patreon is ReentrancyGuard, CreatorList {
     }
 
     function tipETH(address _recipient) public payable {
-        console.log("tip eth sender", msg.sender);
         require(msg.value > .0001 ether, "Ether sent is lower than minimum");
         (bool success, ) = payable(_recipient).call{value: msg.value}("");
         require(success, "Ether not sent successfully");
