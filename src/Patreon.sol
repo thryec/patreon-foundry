@@ -9,6 +9,7 @@ import "openzeppelin-contracts/contracts/utils/Counters.sol";
 contract Patreon is ReentrancyGuard, CreatorList {
     //------------------- Variables ------------------- //
     mapping(uint256 => Stream) public streams; // maps streamIds to stream
+    address public contractAddress;
 
     using Counters for Counters.Counter;
     Counters.Counter private _streamIds; // track unique streamIds
@@ -58,6 +59,10 @@ contract Patreon is ReentrancyGuard, CreatorList {
         uint256 recipientBalance
     );
 
+    constructor() {
+        contractAddress = address(this);
+    }
+
     //------------------- Mutative Functions ------------------- //
 
     function createETHStream(
@@ -65,6 +70,7 @@ contract Patreon is ReentrancyGuard, CreatorList {
         uint256 _startTime,
         uint256 _stopTime
     ) public payable returns (uint256) {
+        console.log("contract address", address(this));
         uint256 _depositAmount = msg.value;
         require(_recipient != address(0x00), "stream to the zero address");
         require(_recipient != address(this), "stream to the contract itself");

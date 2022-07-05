@@ -26,33 +26,42 @@ contract PatreonTest is Test {
 
     //------------------- Streaming ETH ------------------- //
 
-    function testStreamETH() public {
-        vm.startPrank(alice);
-        uint256 streamId1 = patreon.createETHStream{value: depositAmount}(
-            bob,
-            startBlockTime,
-            endBlockTime
-        );
-        uint256 streamId2 = patreon.createETHStream{value: depositAmount}(
-            bob,
-            startBlockTime,
-            endBlockTime
-        );
-        assertEq(streamId1, 0);
-        assertEq(streamId2, 1);
-    }
+    // function testStreamETH() public {
+    //     vm.startPrank(alice);
+    //     uint256 streamId1 = patreon.createETHStream{value: depositAmount}(
+    //         bob,
+    //         startBlockTime,
+    //         endBlockTime
+    //     );
+    //     uint256 streamId2 = patreon.createETHStream{value: depositAmount}(
+    //         bob,
+    //         startBlockTime,
+    //         endBlockTime
+    //     );
+    //     assertEq(streamId1, 0);
+    //     assertEq(streamId2, 1);
+    // }
 
-    function testStreamETHRequiresNonZeroReceiver() public {
-        vm.expectRevert(bytes("stream to the zero address"));
+    // function testStreamETHRequiresNonZeroReceiver() public {
+    //     vm.expectRevert(bytes("stream to the zero address"));
+    //     vm.startPrank(alice);
+    //     patreon.createETHStream{value: depositAmount}(
+    //         address(0),
+    //         startBlockTime,
+    //         endBlockTime
+    //     );
+    // }
+
+    function testStreamETHRequiresReceiverNotContract() public {
+        address patreonContract = patreon.contractAddress();
+        vm.expectRevert(bytes("stream to the contract itself"));
         vm.startPrank(alice);
         patreon.createETHStream{value: depositAmount}(
-            address(0),
+            patreonContract,
             startBlockTime,
             endBlockTime
         );
     }
-
-    // function testStreamETHRequiresReceiverNotContract() public {}
 
     // function testStreamETHRequiresReceiverNotSender() public {}
 
