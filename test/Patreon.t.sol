@@ -18,6 +18,15 @@ contract PatreonTest is Test {
     uint256 startBlockTime = 1;
     uint256 endBlockTime = 1001;
 
+    event CreateETHStream(
+        uint256 indexed streamId,
+        address indexed sender,
+        address indexed recipient,
+        uint256 deposit,
+        uint256 startTime,
+        uint256 stopTime
+    );
+
     function setUp() public {
         patreon = new Patreon();
         vm.deal(alice, 100 ether);
@@ -42,9 +51,27 @@ contract PatreonTest is Test {
     //     assertEq(streamId2, 1);
     // }
 
+    function testStreamETHEmitsCreateEvent() public {
+        vm.expectEmit(true, true, true, true);
+        emit CreateETHStream(
+            0,
+            alice,
+            bob,
+            depositAmount,
+            startBlockTime,
+            endBlockTime
+        );
+        vm.prank(alice);
+        patreon.createETHStream{value: depositAmount}(
+            bob,
+            startBlockTime,
+            endBlockTime
+        );
+    }
+
     // function testStreamETHRequiresNonZeroReceiver() public {
     //     vm.expectRevert(bytes("stream to the zero address"));
-    //     vm.startPrank(alice);
+    //     vm.prank(alice);
     //     patreon.createETHStream{value: depositAmount}(
     //         address(0),
     //         startBlockTime,
@@ -158,17 +185,17 @@ contract PatreonTest is Test {
 
     //------------------- Reading Contract Values ------------------- //
 
-    function testGetStreamInfoById() public {
-        uint256 streamId = createStreamForTesting();
-        Patreon.Stream memory createdStream = patreon.getStream(streamId);
-        uint256 rate = depositAmount / (endBlockTime - startBlockTime);
-        assertEq(createdStream.sender, alice);
-        assertEq(createdStream.recipient, bob);
-        assertEq(createdStream.deposit, depositAmount);
-        assertEq(createdStream.startTime, startBlockTime);
-        assertEq(createdStream.stopTime, endBlockTime);
-        assertEq(createdStream.ratePerSecond, rate);
-    }
+    // function testGetStreamInfoById() public {
+    //     uint256 streamId = createStreamForTesting();
+    //     Patreon.Stream memory createdStream = patreon.getStream(streamId);
+    //     uint256 rate = depositAmount / (endBlockTime - startBlockTime);
+    //     assertEq(createdStream.sender, alice);
+    //     assertEq(createdStream.recipient, bob);
+    //     assertEq(createdStream.deposit, depositAmount);
+    //     assertEq(createdStream.startTime, startBlockTime);
+    //     assertEq(createdStream.stopTime, endBlockTime);
+    //     assertEq(createdStream.ratePerSecond, rate);
+    // }
 
     // function testGetCurrentETHBalance() public {}
 
