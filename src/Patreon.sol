@@ -70,7 +70,6 @@ contract Patreon is ReentrancyGuard, CreatorList {
         uint256 _startTime,
         uint256 _stopTime
     ) public payable returns (uint256) {
-        console.log("contract address", address(this));
         uint256 _depositAmount = msg.value;
         require(_recipient != address(0x00), "stream to the zero address");
         require(_recipient != address(this), "stream to the contract itself");

@@ -83,26 +83,36 @@ contract PatreonTest is Test {
     //     );
     // }
 
-    function testStreamETHRequiresValidStartTime() public {
-        uint256 invalidStartTime = 0;
-        vm.expectRevert(bytes("start time before block.timestamp"));
-        vm.prank(alice);
-        patreon.createETHStream{value: depositAmount}(
-            bob,
-            invalidStartTime,
-            endBlockTime
-        );
-    }
-
-    // function testStreamETHRequiresValidEndTime() public {
-    //     vm.expectRevert(bytes("deposit is zero"));
+    // function testStreamETHRequiresValidStartTime() public {
+    //     uint256 invalidStartTime = 0;
+    //     vm.expectRevert(bytes("start time before block.timestamp"));
     //     vm.prank(alice);
     //     patreon.createETHStream{value: depositAmount}(
     //         bob,
-    //         startBlockTime,
+    //         invalidStartTime,
     //         endBlockTime
     //     );
     // }
+
+    // function testStreamETHRequiresValidEndTime() public {
+    //     vm.expectRevert(bytes("stop time before the start time"));
+    //     vm.prank(alice);
+    //     patreon.createETHStream{value: depositAmount}(
+    //         bob,
+    //         endBlockTime,
+    //         startBlockTime
+    //     );
+    // }
+
+    function testStreamETHRequiresDepositMoreThanDuration() public {
+        vm.expectRevert(bytes("deposit smaller than time delta"));
+        vm.prank(alice);
+        patreon.createETHStream{value: 999 wei}(
+            bob,
+            startBlockTime,
+            endBlockTime
+        );
+    }
 
     // function testStreamETHRequiresNoRemainder() public {
     //     vm.expectRevert(bytes("deposit is zero"));
