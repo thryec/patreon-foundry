@@ -73,15 +73,46 @@ contract PatreonTest is Test {
     //     );
     // }
 
-    function testStreamETHRequiresDepositNotZero() public {
-        vm.expectRevert(bytes("deposit is zero"));
+    // function testStreamETHRequiresDepositNotZero() public {
+    //     vm.expectRevert(bytes("deposit is zero"));
+    //     vm.prank(alice);
+    //     patreon.createETHStream{value: 0 ether}(
+    //         bob,
+    //         startBlockTime,
+    //         endBlockTime
+    //     );
+    // }
+
+    function testStreamETHRequiresValidStartTime() public {
+        uint256 invalidStartTime = 0;
+        vm.expectRevert(bytes("start time before block.timestamp"));
         vm.prank(alice);
-        patreon.createETHStream{value: 0 ether}(
+        patreon.createETHStream{value: depositAmount}(
             bob,
-            startBlockTime,
+            invalidStartTime,
             endBlockTime
         );
     }
+
+    // function testStreamETHRequiresValidEndTime() public {
+    //     vm.expectRevert(bytes("deposit is zero"));
+    //     vm.prank(alice);
+    //     patreon.createETHStream{value: depositAmount}(
+    //         bob,
+    //         startBlockTime,
+    //         endBlockTime
+    //     );
+    // }
+
+    // function testStreamETHRequiresNoRemainder() public {
+    //     vm.expectRevert(bytes("deposit is zero"));
+    //     vm.prank(alice);
+    //     patreon.createETHStream{value: depositAmount}(
+    //         bob,
+    //         startBlockTime,
+    //         endBlockTime
+    //     );
+    // }
 
     //------------------- Withdrawing From ETH Stream ------------------- //
 
