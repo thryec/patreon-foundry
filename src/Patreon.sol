@@ -58,12 +58,6 @@ contract Patreon is ReentrancyGuard, CreatorList {
         uint256 recipientBalance
     );
 
-    //------------------- Contract Logic ------------------- //
-
-    constructor() {
-        // console.log("contract deployer: ", msg.sender);
-    }
-
     //------------------- Mutative Functions ------------------- //
 
     function createETHStream(
@@ -89,6 +83,7 @@ contract Patreon is ReentrancyGuard, CreatorList {
         require(_depositAmount >= _duration, "deposit smaller than time delta");
 
         /* This condition avoids dealing with remainders */
+        console.log("deposit ratio", _depositAmount % _duration);
         require(
             _depositAmount % _duration == 0,
             "deposit not multiple of time delta"
