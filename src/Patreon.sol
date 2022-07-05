@@ -230,7 +230,6 @@ contract Patreon is ReentrancyGuard, CreatorList {
         if (stream.deposit > stream.remainingBalance) {
             uint256 withdrawalAmount = stream.deposit - stream.remainingBalance;
             recipientBalance = totalRecipientBalance - withdrawalAmount;
-            console.log("second withdrawal amount", recipientBalance);
             return recipientBalance;
         }
 
@@ -242,7 +241,6 @@ contract Patreon is ReentrancyGuard, CreatorList {
             /* `recipientBalance` cannot and should not be bigger than `remainingBalance`. */
             uint256 senderBalance = stream.remainingBalance -
                 totalRecipientBalance;
-            console.log("sender balance", senderBalance);
             return senderBalance;
         }
         // return 0;

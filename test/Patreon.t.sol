@@ -202,46 +202,50 @@ contract PatreonTest is Test {
 
     //------------------- Reading Contract Values ------------------- //
 
-    // function testGetStreamInfoById() public {
-    //     uint256 streamId = createStreamForTesting();
-    //     Patreon.Stream memory createdStream = patreon.getStream(streamId);
-    //     uint256 rate = depositAmount / (endBlockTime - startBlockTime);
-    //     assertEq(createdStream.sender, alice);
-    //     assertEq(createdStream.recipient, bob);
-    //     assertEq(createdStream.deposit, depositAmount);
-    //     assertEq(createdStream.startTime, startBlockTime);
-    //     assertEq(createdStream.stopTime, endBlockTime);
-    //     assertEq(createdStream.ratePerSecond, rate);
-    // }
+    function testGetStreamInfoById() public {
+        uint256 streamId = createStreamForTesting();
+        Patreon.Stream memory createdStream = patreon.getStream(streamId);
+        uint256 rate = depositAmount / (endBlockTime - startBlockTime);
+        assertEq(createdStream.sender, alice);
+        assertEq(createdStream.recipient, bob);
+        assertEq(createdStream.deposit, depositAmount);
+        assertEq(createdStream.startTime, startBlockTime);
+        assertEq(createdStream.stopTime, endBlockTime);
+        assertEq(createdStream.ratePerSecond, rate);
+    }
 
-    // function testGetCurrentETHBalanceOfRecipient() public {
-    //     uint256 streamId = createStreamForTesting();
-    //     vm.warp(501);
-    //     uint256 currentBalance = patreon.currentETHBalanceOf(streamId, bob);
-    //     assertEq(currentBalance, 5 ether);
-    // }
+    function testGetStreamRequiresStreamExists() public {
+        uint256 fakeStreamId = 0;
+        vm.expectRevert(bytes("stream does not exist"));
+        patreon.getStream(fakeStreamId);
+    }
 
-    function testGetCurrentETHBalanceOfSender() public {
+    function testGetETHBalanceOfRecipient() public {
+        uint256 streamId = createStreamForTesting();
+        vm.warp(501);
+        uint256 currentBalance = patreon.currentETHBalanceOf(streamId, bob);
+        assertEq(currentBalance, 5 ether);
+    }
+
+    function testGetETHBalanceOfSender() public {
         uint256 streamId = createStreamForTesting();
         vm.warp(501);
         uint256 currentBalance = patreon.currentETHBalanceOf(streamId, alice);
         assertEq(currentBalance, 5 ether);
     }
 
-    // function testGetETHBalanceMultipleWithdrawals() public {
-    //     uint256 streamId = createStreamForTesting();
-    //     vm.warp(501);
-    //     uint256 currentBalance = patreon.currentETHBalanceOf(streamId, bob);
-    //     console.log("recipient current balance", currentBalance);
-    //     assertEq(currentBalance, 5 ether);
-    // }
+    function testGetTimePassedInStream() public {
+        uint256 streamId = createStreamForTesting();
+        vm.warp(501);
+        uint256 timePassed = patreon.timeDeltaOf(streamId);
+        assertEq(timePassed, 500);
+    }
 
-    // function testGetTimePassedInStream() public {
-    //     uint256 streamId = createStreamForTesting();
-    //     vm.warp(501);
-    //     uint256 timePassed = patreon.timeDeltaOf(streamId);
-    //     assertEq(timePassed, 500);
-    // }
+    function testGetETHBAlanceRequiresStreamExists() public {
+        uint256 fakeStreamId = 0;
+        vm.expectRevert(bytes("stream does not exist"));
+        patreon.currentETHBalanceOf(fakeStreamId, bob);
+    }
 
     //------------------- Helper Functions ------------------- //
 
