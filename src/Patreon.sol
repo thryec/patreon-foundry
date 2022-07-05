@@ -290,7 +290,7 @@ contract Patreon is ReentrancyGuard, CreatorList {
     modifier onlyRecipient(uint256 streamId) {
         require(
             msg.sender == streams[streamId].recipient,
-            "caller is not the sender of the stream"
+            "caller is not the recipient of the stream"
         );
         _;
     }
