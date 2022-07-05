@@ -212,22 +212,55 @@ contract PatreonTest is Test {
     //     patreon.recipientWithdrawFromStream(fakeStreamId, 5 ether);
     // }
 
-    function testWithdrawEmitsEvent() public {
-        uint256 streamId = createStreamForTesting();
-        vm.expectEmit(true, true, true, true);
-        vm.warp(501);
-        emit RecipientWithdrawFromStream(streamId, bob, 5 ether);
-        vm.prank(bob);
-        patreon.recipientWithdrawFromStream(streamId, 5 ether);
-    }
+    // function testWithdrawEmitsEvent() public {
+    //     uint256 streamId = createStreamForTesting();
+    //     vm.expectEmit(true, true, true, true);
+    //     vm.warp(501);
+    //     emit RecipientWithdrawFromStream(streamId, bob, 5 ether);
+    //     vm.prank(bob);
+    //     patreon.recipientWithdrawFromStream(streamId, 5 ether);
+    // }
 
     //------------------- Cancelling ETH Stream ------------------- //
 
-    // function testCancelStream() public {}
+    function testCancelStream() public {
+        uint256 streamId = createStreamForTesting();
+        vm.prank(alice);
+        patreon.senderCancelStream(streamId);
+        vm.expectRevert(bytes("stream does not exist"));
+        patreon.getStream(streamId);
+    }
 
-    // function testCancelStreamRequiresSender() public {}
+    function testCancelStreamWithdrawsBalanceToRecipient() public {
+        uint256 streamId = createStreamForTesting();
+        vm.warp(501);
+        vm.prank(alice);
+        patreon.senderCancelStream(streamId);
+        assertEq(bob.balance, 105 ether);
+    }
 
-    // function testCancelStreamRequiresStreamExists() public {}
+    function testCancelStreamRequiresSender() public {
+        uint256 streamId = createStreamForTesting();
+        vm.expectRevert(bytes("caller is not the sender of the stream"));
+        patreon.senderCancelStream(streamId);
+    }
+
+    function testCancelStreamRequiresStreamExists() public {
+        uint256 fakeStreamId = 0;
+        vm.expectRevert(bytes("stream does not exist"));
+        vm.prank(alice);
+        patreon.senderCancelStream(fakeStreamId);
+    }
+
+    function testCancelStreamEmitsEvent() public {
+        uint256 streamId = createStreamForTesting();
+        uint256 aliceBalance = patreon.currentETHBalanceOf(streamId, alice);
+        uint256 bobBalance = patreon.currentETHBalanceOf(streamId, bob);
+        vm.expectEmit(true, true, true, true);
+        emit SenderCancelStream(streamId, alice, bob, aliceBalance, bobBalance);
+        vm.prank(alice);
+        patreon.senderCancelStream(streamId);
+    }
 
     //------------------- Tipping ETH ------------------- //
 
