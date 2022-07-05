@@ -208,13 +208,13 @@ contract Patreon is ReentrancyGuard, CreatorList {
      * @dev Throws if the id does not point to a valid stream.
      * @param _streamId The id of the stream for which to query the balance.
      * @param _who The address for which to query the balance.
-     * @return The total funds allocated to `who` as uint256.
+     * @return balance The total funds allocated to `who` as uint256.
      */
     function currentETHBalanceOf(uint256 _streamId, address _who)
         public
         view
         streamExists(_streamId)
-        returns (uint256)
+        returns (uint256 balance)
     {
         uint256 recipientBalance;
         Stream memory stream = streams[_streamId];
@@ -230,15 +230,19 @@ contract Patreon is ReentrancyGuard, CreatorList {
         if (stream.deposit > stream.remainingBalance) {
             uint256 withdrawalAmount = stream.deposit - stream.remainingBalance;
             recipientBalance = totalRecipientBalance - withdrawalAmount;
+            return recipientBalance;
         }
 
-        if (_who == stream.recipient) return recipientBalance;
+        if (_who == stream.recipient) {
+            return totalRecipientBalance;
+        }
+
         if (_who == stream.sender) {
             /* `recipientBalance` cannot and should not be bigger than `remainingBalance`. */
             uint256 senderBalance = stream.remainingBalance - recipientBalance;
             return senderBalance;
         }
-        return 0;
+        // return 0;
     }
 
     /**

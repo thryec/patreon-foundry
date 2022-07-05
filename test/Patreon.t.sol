@@ -14,7 +14,6 @@ contract PatreonTest is Test {
 
     uint256 transferAmount = 1 ether;
     uint256 depositAmount = 10 ether;
-
     uint256 startBlockTime = 1;
     uint256 endBlockTime = 1001;
 
@@ -25,6 +24,20 @@ contract PatreonTest is Test {
         uint256 deposit,
         uint256 startTime,
         uint256 stopTime
+    );
+
+    event RecipientWithdrawFromStream(
+        uint256 indexed streamId,
+        address indexed recipient,
+        uint256 amount
+    );
+
+    event SenderCancelStream(
+        uint256 indexed streamId,
+        address indexed sender,
+        address indexed recipient,
+        uint256 senderBalance,
+        uint256 recipientBalance
     );
 
     function setUp() public {
@@ -51,23 +64,23 @@ contract PatreonTest is Test {
     //     assertEq(streamId2, 1);
     // }
 
-    function testStreamETHEmitsCreateEvent() public {
-        vm.expectEmit(true, true, true, true);
-        emit CreateETHStream(
-            0,
-            alice,
-            bob,
-            depositAmount,
-            startBlockTime,
-            endBlockTime
-        );
-        vm.prank(alice);
-        patreon.createETHStream{value: depositAmount}(
-            bob,
-            startBlockTime,
-            endBlockTime
-        );
-    }
+    // function testStreamETHEmitsCreateEvent() public {
+    //     vm.expectEmit(true, true, true, true);
+    //     emit CreateETHStream(
+    //         0,
+    //         alice,
+    //         bob,
+    //         depositAmount,
+    //         startBlockTime,
+    //         endBlockTime
+    //     );
+    //     vm.prank(alice);
+    //     patreon.createETHStream{value: depositAmount}(
+    //         bob,
+    //         startBlockTime,
+    //         endBlockTime
+    //     );
+    // }
 
     // function testStreamETHRequiresNonZeroReceiver() public {
     //     vm.expectRevert(bytes("stream to the zero address"));
@@ -155,7 +168,11 @@ contract PatreonTest is Test {
 
     //------------------- Withdrawing From ETH Stream ------------------- //
 
-    // function testWithdrawFromStream() public {}
+    // function testWithdrawFromStream() public {
+    //     uint256 streamId = createStreamForTesting();
+    //     vm.prank(bob);
+    //     patreon.recipientWithdrawFromStream(streamId, _amount);
+    // }
 
     // function testWithdrawFromStreamRequiresReceiver() public {}
 
@@ -197,9 +214,20 @@ contract PatreonTest is Test {
     //     assertEq(createdStream.ratePerSecond, rate);
     // }
 
-    // function testGetCurrentETHBalance() public {}
+    function testGetCurrentETHBalanceOfRecipient() public {
+        uint256 streamId = createStreamForTesting();
+        vm.warp(501);
+        uint256 currentBalance = patreon.currentETHBalanceOf(streamId, bob);
+        console.log("recipient current balance", currentBalance);
+        assertEq(currentBalance, 5 ether);
+    }
 
-    // function testGetTimePassedInStream() public {}
+    // function testGetTimePassedInStream() public {
+    //     uint256 streamId = createStreamForTesting();
+    //     vm.warp(501);
+    //     uint256 timePassed = patreon.timeDeltaOf(streamId);
+    //     assertEq(timePassed, 500);
+    // }
 
     //------------------- Helper Functions ------------------- //
 
