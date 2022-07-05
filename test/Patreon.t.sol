@@ -24,7 +24,18 @@ contract PatreonTest is Test {
 
     function testStreamETH() public {
         vm.startPrank(alice);
-        patreon.createETHStream{value: depositAmount}(bob, 1, 100);
+        uint256 streamId1 = patreon.createETHStream{value: depositAmount}(
+            bob,
+            1,
+            101
+        );
+        uint256 streamId2 = patreon.createETHStream{value: depositAmount}(
+            bob,
+            1,
+            101
+        );
+        assertEq(streamId1, 0);
+        assertEq(streamId2, 1);
     }
 
     // function testStreamETHRequiresNonZeroReceiver() public {}

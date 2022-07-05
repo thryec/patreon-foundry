@@ -83,7 +83,6 @@ contract Patreon is ReentrancyGuard, CreatorList {
         require(_depositAmount >= _duration, "deposit smaller than time delta");
 
         /* This condition avoids dealing with remainders */
-        console.log("deposit ratio", _depositAmount % _duration);
         require(
             _depositAmount % _duration == 0,
             "deposit not multiple of time delta"
