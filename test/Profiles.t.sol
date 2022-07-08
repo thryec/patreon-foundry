@@ -9,11 +9,11 @@ import {console} from "forge-std/console.sol";
 contract ProfileTest is Test {
     Profiles internal profile;
 
-    function setUp() {
+    function setUp() public {
         profile = new Profiles();
     }
 
-    function testAddingProfile() {}
+    function testAddingProfile() public {}
 
-    function testGettingProfile() {}
+    function testGettingProfile() public {}
 }
