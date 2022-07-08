@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.13;
 
 import "openzeppelin-contracts/contracts/utils/cryptography/MerkleProof.sol";
 import "openzeppelin-contracts/contracts/access/Ownable.sol";

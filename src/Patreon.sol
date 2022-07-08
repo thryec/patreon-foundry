@@ -8,8 +8,8 @@ import "openzeppelin-contracts/contracts/utils/Counters.sol";
 
 contract Patreon is ReentrancyGuard, CreatorList {
     //------------------- Variables ------------------- //
-    mapping(uint256 => Stream) public streams; // maps streamIds to stream
     address public contractAddress;
+    mapping(uint256 => Stream) public streams; // maps streamIds to stream
 
     using Counters for Counters.Counter;
     Counters.Counter private _streamIds; // track unique streamIds
