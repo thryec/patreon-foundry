@@ -12,14 +12,16 @@ contract Profiles {
         addressList.push(user);
     }
 
-    function updateProfile(address user, string calldata updatedHash) public {
-        require(msg.sender == user, "updating requires sender to be owner");
-        profiles[user] = updatedHash;
-    }
-
     function deleteProfile(address user) public {
         require(msg.sender == user, "deleting requires sender to be owner");
         delete profiles[user];
+        uint256 addressNum = addressList.length;
+
+        for (uint256 i = 0; i < addressNum; i++) {
+            if (addressList[i] == user) {
+                delete addressList[i];
+            }
+        }
     }
 
     function getProfile(address user)

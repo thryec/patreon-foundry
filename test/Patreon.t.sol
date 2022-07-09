@@ -339,23 +339,16 @@ contract PatreonTest is Test {
         assertEq(aliceProfile, testLink1);
     }
 
-    function testUpdateProfile() public {
-        vm.prank(alice);
-        patreon.updateProfile(alice, testLink2);
-        string memory aliceProfile = patreon.getProfile(alice);
-        assertEq(aliceProfile, testLink2);
-    }
-
-    function testUpdateProfileRequiresOwner() public {
-        vm.expectRevert(bytes("updating requires sender to be owner"));
-        patreon.updateProfile(alice, testLink2);
-    }
-
     function testDeleteProfile() public {
+        patreon.addProfile(alice, testLink1);
+
         vm.prank(alice);
         patreon.deleteProfile(alice);
         string memory aliceProfile = patreon.getProfile(alice);
         assertEq(aliceProfile, emptyString);
+
+        string[] memory profiles = patreon.getAllProfiles();
+        assertEq(profiles[0], "");
     }
 
     function testDeleteProfileRequiresOwner() public {
@@ -380,6 +373,22 @@ contract PatreonTest is Test {
 
         assertEq(address1, alice);
         assertEq(address2, bob);
+    }
+
+    function testGetAllProfilesAddAfterDelete() public {
+        patreon.addProfile(alice, testLink1);
+        string[] memory profiles = patreon.getAllProfiles();
+        assertEq(profiles[0], testLink1);
+
+        vm.prank(alice);
+        patreon.deleteProfile(alice);
+        string[] memory profiles2 = patreon.getAllProfiles();
+        assertEq(profiles2[0], "");
+
+        patreon.addProfile(alice, testLink1);
+        string[] memory profiles3 = patreon.getAllProfiles();
+        assertEq(profiles3[0], "");
+        assertEq(profiles3[1], testLink1);
     }
 
     //------------------- Helper Functions ------------------- //
