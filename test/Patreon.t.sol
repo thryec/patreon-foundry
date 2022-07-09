@@ -363,6 +363,14 @@ contract PatreonTest is Test {
         patreon.deleteProfile(alice);
     }
 
+    function testGetAllProfiles() public {
+        patreon.addProfile(alice, testLink1);
+        patreon.addProfile(bob, testLink2);
+
+        string[] memory profiles = patreon.getAllProfiles();
+        assertEq(profiles.length, 2);
+    }
+
     //------------------- Helper Functions ------------------- //
 
     function createStreamForTesting() public returns (uint256) {

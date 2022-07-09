@@ -30,8 +30,13 @@ contract Profiles {
         return profiles[user];
     }
 
-    function getAllProfiles() public view {
+    function getAllProfiles() public view returns (string[] memory) {
         uint256 totalProfiles = addressList.length;
-        console.log("total profiles", totalProfiles);
+        string[] memory allProfiles = new string[](totalProfiles);
+        for (uint256 i = 0; i < totalProfiles; i++) {
+            string memory currentProfile = profiles[addressList[i]];
+            allProfiles[i] = currentProfile;
+        }
+        return allProfiles;
     }
 }
