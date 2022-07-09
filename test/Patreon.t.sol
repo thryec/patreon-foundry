@@ -371,6 +371,17 @@ contract PatreonTest is Test {
         assertEq(profiles.length, 2);
     }
 
+    function testGetAllAddresses() public {
+        patreon.addProfile(alice, testLink1);
+        patreon.addProfile(bob, testLink2);
+
+        address address1 = patreon.addressList(0);
+        address address2 = patreon.addressList(1);
+
+        assertEq(address1, alice);
+        assertEq(address2, bob);
+    }
+
     //------------------- Helper Functions ------------------- //
 
     function createStreamForTesting() public returns (uint256) {
