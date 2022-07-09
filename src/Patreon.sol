@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "./CreatorList.sol";
+import "./Profiles.sol";
 import {console} from "forge-std/console.sol";
 import "openzeppelin-contracts/contracts/security/ReentrancyGuard.sol";
 import "openzeppelin-contracts/contracts/utils/Counters.sol";
 
-contract Patreon is ReentrancyGuard, CreatorList {
+contract Patreon is ReentrancyGuard, Profiles {
     //------------------- Variables ------------------- //
     address public contractAddress;
     mapping(uint256 => Stream) public streams; // maps streamIds to stream

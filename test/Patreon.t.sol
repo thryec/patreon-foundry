@@ -17,6 +17,14 @@ contract PatreonTest is Test {
     uint256 startBlockTime = 1;
     uint256 endBlockTime = 1001;
 
+    string testLink1 =
+        "https://ipfs.infura.io/ipfs/bafybohew2j2wbn3mzl7dakkoklstoas4jq3rj7wgiv6mmtvk7v7a";
+    string testLink2 =
+        "https://ipfs.infura.io/ipfs/bafybohc3gokgtwtxnfwgalh7qftpipwrjlk7lxifwfgrajnvk52q";
+    string emptyString = "";
+
+    //------------------- Events ------------------- //
+
     event CreateETHStream(
         uint256 indexed streamId,
         address indexed sender,
@@ -321,6 +329,38 @@ contract PatreonTest is Test {
         uint256 fakeStreamId = 0;
         vm.expectRevert(bytes("stream does not exist"));
         patreon.currentETHBalanceOf(fakeStreamId, bob);
+    }
+
+    //------------------- Profile Functions ------------------- //
+
+    function testAddProfile() public {
+        patreon.addProfile(alice, testLink1);
+        string memory aliceProfile = patreon.getProfile(alice);
+        assertEq(aliceProfile, testLink1);
+    }
+
+    function testUpdateProfile() public {
+        vm.prank(alice);
+        patreon.updateProfile(alice, testLink2);
+        string memory aliceProfile = patreon.getProfile(alice);
+        assertEq(aliceProfile, testLink2);
+    }
+
+    function testUpdateProfileRequiresOwner() public {
+        vm.expectRevert(bytes("updating requires sender to be owner"));
+        patreon.updateProfile(alice, testLink2);
+    }
+
+    function testDeleteProfile() public {
+        vm.prank(alice);
+        patreon.deleteProfile(alice);
+        string memory aliceProfile = patreon.getProfile(alice);
+        assertEq(aliceProfile, emptyString);
+    }
+
+    function testDeleteProfileRequiresOwner() public {
+        vm.expectRevert(bytes("deleting requires sender to be owner"));
+        patreon.deleteProfile(alice);
     }
 
     //------------------- Helper Functions ------------------- //
