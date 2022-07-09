@@ -339,6 +339,15 @@ contract PatreonTest is Test {
         assertEq(aliceProfile, testLink1);
     }
 
+    function testDoubleAddingProfile() public {
+        patreon.addProfile(alice, testLink1);
+        patreon.addProfile(alice, testLink2);
+        string memory aliceProfile = patreon.getProfile(alice);
+        assertEq(aliceProfile, testLink2);
+        string[] memory profiles = patreon.getAllProfiles();
+        assertEq(profiles[0], testLink2);
+    }
+
     function testDeleteProfile() public {
         patreon.addProfile(alice, testLink1);
 

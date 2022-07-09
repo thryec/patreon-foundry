@@ -2,21 +2,33 @@
 pragma solidity ^0.8.13;
 
 import {console} from "forge-std/console.sol";
+import "openzeppelin-contracts/contracts/utils/Counters.sol";
 
 contract Profiles {
+    using Counters for Counters.Counter;
+    Counters.Counter private profileId; // track number of unique profiles
+
     mapping(address => string) public profiles; // maps user addresses to IPFS hash containing user data
     address[] public addressList; // stores address of all profiles
 
     function addProfile(address user, string calldata ipfsHash) public {
         profiles[user] = ipfsHash;
-        addressList.push(user);
+        if (addressList.length == 0) {
+            addressList.push(user);
+        } else {
+            for (uint256 i = 0; i < addressList.length; i++) {
+                if (addressList[i] != user) {
+                    addressList.push(user);
+                }
+            }
+        }
     }
 
     function deleteProfile(address user) public {
         require(msg.sender == user, "deleting requires sender to be owner");
         delete profiles[user];
-        uint256 addressNum = addressList.length;
 
+        uint256 addressNum = addressList.length;
         for (uint256 i = 0; i < addressNum; i++) {
             if (addressList[i] == user) {
                 delete addressList[i];
