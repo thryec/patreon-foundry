@@ -28,18 +28,12 @@ contract Profiles {
         require(msg.sender == user, "deleting requires sender to be owner");
         delete profiles[user];
 
-        uint256 addressNum = addressList.length;
-        console.log("start address length", addressList.length);
-        for (uint256 i = 0; i < addressNum; i++) {
+        for (uint256 i = 0; i < addressList.length; i++) {
             if (addressList[i] == user) {
-                // console.log("current address", addressList[i]); // alice
-                // console.log("last index", addressList.length - 1); // length of array = 2
-                // addressList[i] = addressList[addressList.length - 1];
-                console.log("current address", addressList[0]);
+                addressList[i] = addressList[addressList.length - 1];
                 addressList.pop();
             }
         }
-        console.log("end address length", addressList.length);
     }
 
     function getProfile(address user)

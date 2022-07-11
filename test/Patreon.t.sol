@@ -384,18 +384,17 @@ contract PatreonTest is Test {
         assertEq(address2, bob);
     }
 
-    // function testGetAllProfilesAddAfterDelete() public {
-    //     patreon.addProfile(alice, testLink1);
-    //     patreon.addProfile(bob, testLink2); // adds alice and bob's address to the array
+    function testGetAllProfilesAddAfterDelete() public {
+        patreon.addProfile(alice, testLink1);
+        patreon.addProfile(bob, testLink2);
 
-    //     vm.prank(alice);
-    //     patreon.deleteProfile(alice);
+        vm.prank(alice);
+        patreon.deleteProfile(alice);
 
-    //     patreon.addProfile(alice, testLink1); // address(0), bob, alice, alice
-    //     string[] memory profiles3 = patreon.getAllProfiles();
-    //     console.log("profile length:", profiles3.length);
-    //     assertEq(profiles3.length, 2);
-    // }
+        patreon.addProfile(alice, testLink1);
+        string[] memory profiles = patreon.getAllProfiles();
+        assertEq(profiles.length, 2);
+    }
 
     //------------------- Helper Functions ------------------- //
 
