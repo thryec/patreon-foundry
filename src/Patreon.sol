@@ -123,7 +123,7 @@ contract Patreon is ReentrancyGuard, Profiles {
     function senderCancelStream(uint256 _streamId)
         external
         nonReentrant
-        streamExists(_streamId)
+        streamIsActive(_streamId)
         onlySender(_streamId)
         returns (bool)
     {
@@ -134,7 +134,7 @@ contract Patreon is ReentrancyGuard, Profiles {
             stream.recipient
         );
 
-        delete streams[_streamId];
+        streams[_streamId].isActive = false;
 
         if (recipientBalance > 0) {
             (bool success, ) = payable(stream.recipient).call{
@@ -302,6 +302,14 @@ contract Patreon is ReentrancyGuard, Profiles {
      */
     modifier streamExists(uint256 streamId) {
         require(streams[streamId].exists, "stream does not exist");
+        _;
+    }
+
+    /**
+     * @dev Throws if the provided id does not point to an active
+     */
+    modifier streamIsActive(uint256 streamId) {
+        require(streams[streamId].isActive, "stream is not active");
         _;
     }
 }
