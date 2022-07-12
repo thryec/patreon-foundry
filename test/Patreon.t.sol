@@ -251,7 +251,13 @@ contract PatreonTest is Test {
         assertEq(currentStream.isActive, false);
     }
 
-    function testCancelStreamRequiresActive() public {}
+    function testCancelStreamRequiresActive() public {
+        uint256 streamId = createStreamForTesting();
+        vm.prank(alice);
+        patreon.senderCancelStream(streamId);
+        vm.expectRevert(bytes("stream is not active"));
+        patreon.senderCancelStream(streamId);
+    }
 
     // function testCancelStreamWithdrawsBalanceToRecipient() public {
     //     uint256 streamId = createStreamForTesting();
