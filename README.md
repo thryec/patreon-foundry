@@ -25,3 +25,7 @@ Level 5 (-vvvvv): Stack traces and setup traces are always displayed.
 
 https://github.com/yieldprotocol/vault-v2
 https://github.com/smartcontractkit/foundry-starter-kit
+
+### Get L1 block.number from Optimism
+
+https://github.com/ethereum-optimism/optimism/blob/91b311680cf8ba93f988b66c79150d9821f17d9a/packages/contracts-bedrock/contracts/L2/L1BlockNumber.sol

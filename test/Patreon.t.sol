@@ -331,6 +331,10 @@ contract PatreonTest is Test {
         patreon.currentETHBalanceOf(fakeStreamId, bob);
     }
 
+    function testGetAllReciverStreamsByAddr() public {}
+
+    function testGetAllContributorStreamsByAddr() public {}
+
     //------------------- Profile Functions ------------------- //
 
     function testAddProfile() public {

@@ -22,7 +22,8 @@ contract Patreon is ReentrancyGuard, Profiles {
         uint256 stopTime;
         address recipient;
         address sender;
-        bool isEntity;
+        bool exists;
+        bool isActive;
     }
 
     //------------------- Events ------------------- //
@@ -97,12 +98,13 @@ contract Patreon is ReentrancyGuard, Profiles {
         streams[currentStreamId] = Stream({
             remainingBalance: _depositAmount,
             deposit: _depositAmount,
-            isEntity: true,
             ratePerSecond: _ratePerSecond,
             recipient: _recipient,
             sender: msg.sender,
             startTime: _startTime,
-            stopTime: _stopTime
+            stopTime: _stopTime,
+            exists: true,
+            isActive: true
         });
 
         emit CreateETHStream(
@@ -116,28 +118,6 @@ contract Patreon is ReentrancyGuard, Profiles {
 
         _streamIds.increment();
         return currentStreamId;
-    }
-
-    function recipientWithdrawFromStream(uint256 _streamId, uint256 _amount)
-        external
-        nonReentrant
-        streamExists(_streamId)
-        onlyRecipient(_streamId)
-        returns (bool)
-    {
-        require(_amount > 0, "amount is zero");
-        Stream memory stream = streams[_streamId];
-
-        uint256 balance = currentETHBalanceOf(_streamId, stream.recipient);
-        require(balance >= _amount, "amount exceeds the available balance");
-        streams[_streamId].remainingBalance = stream.remainingBalance - _amount;
-
-        if (streams[_streamId].remainingBalance == 0) delete streams[_streamId];
-        (bool success, ) = payable(stream.recipient).call{value: _amount}("");
-        require(success, "Ether not withdrawn to recipient");
-
-        emit RecipientWithdrawFromStream(_streamId, stream.recipient, _amount);
-        return true;
     }
 
     function senderCancelStream(uint256 _streamId)
@@ -177,6 +157,28 @@ contract Patreon is ReentrancyGuard, Profiles {
             senderBalance,
             recipientBalance
         );
+        return true;
+    }
+
+    function recipientWithdrawFromStream(uint256 _streamId, uint256 _amount)
+        external
+        nonReentrant
+        streamExists(_streamId)
+        onlyRecipient(_streamId)
+        returns (bool)
+    {
+        require(_amount > 0, "amount is zero");
+        Stream memory stream = streams[_streamId];
+
+        uint256 balance = currentETHBalanceOf(_streamId, stream.recipient);
+        require(balance >= _amount, "amount exceeds the available balance");
+        streams[_streamId].remainingBalance = stream.remainingBalance - _amount;
+
+        if (streams[_streamId].remainingBalance == 0) delete streams[_streamId];
+        (bool success, ) = payable(stream.recipient).call{value: _amount}("");
+        require(success, "Ether not withdrawn to recipient");
+
+        emit RecipientWithdrawFromStream(_streamId, stream.recipient, _amount);
         return true;
     }
 
@@ -299,7 +301,7 @@ contract Patreon is ReentrancyGuard, Profiles {
      * @dev Throws if the provided id does not point to a valid stream.
      */
     modifier streamExists(uint256 streamId) {
-        require(streams[streamId].isEntity, "stream does not exist");
+        require(streams[streamId].exists, "stream does not exist");
         _;
     }
 }
