@@ -85,7 +85,7 @@ contract Patreon is ReentrancyGuard, Profiles {
         uint256 _duration = _stopTime - _startTime;
         uint256 _ratePerSecond = _depositAmount / _duration;
 
-        /* Without this, the rate per second would be zero. */
+        // /* Without this, the rate per second would be zero. */
         require(_depositAmount >= _duration, "deposit smaller than time delta");
 
         /* This condition avoids dealing with remainders */
@@ -123,6 +123,7 @@ contract Patreon is ReentrancyGuard, Profiles {
     function senderCancelStream(uint256 _streamId)
         external
         nonReentrant
+        streamExists(_streamId)
         streamIsActive(_streamId)
         onlySender(_streamId)
         returns (bool)
