@@ -238,6 +238,37 @@ contract Patreon is ReentrancyGuard, Profiles {
     }
 
     /**
+     * @notice Returns an array of streams associated with recipient.
+     * @param recipient The address of the recipient to query.
+     * @return Array of streams associated with the recipient.
+     */
+    function getAllStreamsByRecipient(address recipient)
+        public
+        view
+        returns (Stream[] memory)
+    {
+        uint256 totalStreams = _streamIds.current();
+        uint256 totalRecipientStreams = 0;
+        uint256 resultStreamId = 0;
+
+        for (uint256 i = 0; i <= totalStreams; i++) {
+            if (streams[i].recipient == recipient) {
+                totalRecipientStreams++;
+            }
+        }
+
+        Stream[] memory recipientStreams = new Stream[](totalRecipientStreams);
+
+        for (uint256 i = 0; i < totalStreams; i++) {
+            if (streams[i].recipient == recipient) {
+                recipientStreams[resultStreamId] = streams[i];
+                resultStreamId++;
+            }
+        }
+        return recipientStreams;
+    }
+
+    /**
      * @notice Returns the available funds for the given stream id and address.
      * @dev Throws if the id does not point to a valid stream.
      * @param _streamId The id of the stream for which to query the balance.
