@@ -12,7 +12,7 @@ contract Patreon is ReentrancyGuard, Profiles {
     mapping(uint256 => Stream) public streams; // maps streamIds to stream
 
     using Counters for Counters.Counter;
-    Counters.Counter private _streamIds; // track unique streamIds
+    Counters.Counter public _streamIds; // track unique streamIds
 
     struct Stream {
         uint256 deposit;
@@ -204,6 +204,37 @@ contract Patreon is ReentrancyGuard, Profiles {
         returns (Stream memory)
     {
         return streams[_streamId];
+    }
+
+    /**
+     * @notice Returns an array of streams associated with sender.
+     * @param sender The address of the sender to query.
+     * @return Array of streams associated with the sender.
+     */
+    function getAllStreamsBySender(address sender)
+        public
+        view
+        returns (Stream[] memory)
+    {
+        uint256 totalStreams = _streamIds.current();
+        uint256 totalSenderStreams = 0;
+        uint256 resultStreamId = 0;
+
+        for (uint256 i = 0; i <= totalStreams; i++) {
+            if (streams[i].sender == sender) {
+                totalSenderStreams++;
+            }
+        }
+
+        Stream[] memory senderStreams = new Stream[](totalSenderStreams);
+
+        for (uint256 i = 0; i < totalStreams; i++) {
+            if (streams[i].sender == sender) {
+                senderStreams[resultStreamId] = streams[i];
+                resultStreamId++;
+            }
+        }
+        return senderStreams;
     }
 
     /**
