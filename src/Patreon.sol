@@ -15,6 +15,7 @@ contract Patreon is ReentrancyGuard, Profiles {
     Counters.Counter public _streamIds; // track unique streamIds
 
     struct Stream {
+        uint256 streamId;
         uint256 deposit;
         uint256 ratePerSecond;
         uint256 remainingBalance;
@@ -96,6 +97,7 @@ contract Patreon is ReentrancyGuard, Profiles {
 
         uint256 currentStreamId = _streamIds.current();
         streams[currentStreamId] = Stream({
+            streamId: currentStreamId,
             remainingBalance: _depositAmount,
             deposit: _depositAmount,
             ratePerSecond: _ratePerSecond,
