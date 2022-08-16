@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity 0.8.7;
 
 import {console} from "forge-std/console.sol";
 import "openzeppelin-contracts/contracts/utils/Counters.sol";
@@ -11,7 +11,7 @@ contract Profiles {
     mapping(address => string) public profiles; // maps user addresses to IPFS hash containing user data
     address[] public addressList; // stores address of all profiles
 
-    function addProfile(address user, string calldata ipfsHash) public {
+    function addProfile(address user, string calldata ipfsHash) external {
         profiles[user] = ipfsHash;
         if (addressList.length == 0) {
             addressList.push(user);
@@ -24,7 +24,7 @@ contract Profiles {
         }
     }
 
-    function deleteProfile(address user) public {
+    function deleteProfile(address user) external {
         require(msg.sender == user, "deleting requires sender to be owner");
         delete profiles[user];
 
@@ -37,14 +37,14 @@ contract Profiles {
     }
 
     function getProfile(address user)
-        public
+        external
         view
         returns (string memory ipfsHash)
     {
         return profiles[user];
     }
 
-    function getAllProfiles() public view returns (string[] memory) {
+    function getAllProfiles() external view returns (string[] memory) {
         uint256 totalProfiles = addressList.length;
         string[] memory allProfiles = new string[](totalProfiles);
         for (uint256 i = 0; i < totalProfiles; i++) {
