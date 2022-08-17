@@ -4,9 +4,11 @@ pragma solidity 0.8.7;
 import "./Profiles.sol";
 import {console} from "forge-std/console.sol";
 import "openzeppelin-contracts/contracts/security/ReentrancyGuard.sol";
+import "openzeppelin-contracts/contracts/security/Pausable.sol";
+import "openzeppelin-contracts/contracts/access/Ownable.sol";
 import "openzeppelin-contracts/contracts/utils/Counters.sol";
 
-contract Patreon is ReentrancyGuard, Profiles {
+contract Patreon is ReentrancyGuard, Pausable, Ownable, Profiles {
     //------------------- Variables ------------------- //
     address public contractAddress;
     mapping(uint256 => Stream) public streams; // maps streamIds to stream
@@ -111,7 +113,7 @@ contract Patreon is ReentrancyGuard, Profiles {
         address recipient,
         uint256 startTime,
         uint256 stopTime
-    ) external payable returns (uint256) {
+    ) external payable whenNotPaused returns (uint256) {
         uint256 _depositAmount = msg.value;
         require(recipient != address(0x00), "stream to the zero address");
         require(recipient != address(this), "stream to the contract itself");
@@ -165,6 +167,7 @@ contract Patreon is ReentrancyGuard, Profiles {
     function senderCancelStream(uint256 streamId)
         external
         nonReentrant
+        whenNotPaused
         streamExists(streamId)
         streamIsActive(streamId)
         onlySender(streamId)
@@ -206,6 +209,7 @@ contract Patreon is ReentrancyGuard, Profiles {
     function recipientWithdrawFromStream(uint256 streamId, uint256 amount)
         external
         nonReentrant
+        whenNotPaused
         streamExists(streamId)
         onlyRecipient(streamId)
         returns (bool)
@@ -231,6 +235,16 @@ contract Patreon is ReentrancyGuard, Profiles {
         require(msg.value > .0001 ether, "Ether sent is lower than minimum");
         (bool success, ) = payable(recipient).call{value: msg.value}("");
         require(success, "Ether not sent successfully");
+    }
+
+    //------------------- Pausable Functions ------------------- //
+
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    function unpause() external onlyOwner {
+        _unpause();
     }
 
     //------------------- View Functions ------------------- //
