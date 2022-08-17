@@ -371,6 +371,29 @@ contract PatreonTest is Test {
         assertEq(result2.length, 2);
     }
 
+    //------------------- Pausable Functions ------------------- //
+
+    function testCreateStreamRevertsWhenPaused() public {
+        patreon.pause();
+        vm.expectRevert(bytes("Pausable: paused"));
+        createStreamForTesting();
+    }
+
+    function testWithdrawStreamRevertsWhenPaused() public {
+        uint256 streamId = createStreamForTesting();
+        patreon.pause();
+        uint256 withdrawalAmt = patreon.currentETHBalanceOf(streamId, bob);
+        vm.expectRevert(bytes("Pausable: paused"));
+        patreon.recipientWithdrawFromStream(streamId, withdrawalAmt);
+    }
+
+    function testCancelStreamRevertsWhenPaused() public {
+        uint256 streamId = createStreamForTesting();
+        patreon.pause();
+        vm.expectRevert(bytes("Pausable: paused"));
+        patreon.senderCancelStream(streamId);
+    }
+
     //------------------- Profile Functions ------------------- //
 
     function testAddProfile() public {
