@@ -18,9 +18,9 @@ contract PatreonTest is Test {
     uint256 endBlockTime = 1001;
 
     string testLink1 =
-        "https://ipfs.infura.io/ipfs/bafybohew2j2wbn3mzl7dakkoklstoas4jq3rj7wgiv6mmtvk7v7a";
+        "https://ipfs.io/ipfs/bafybohew2j2wbn3mzl7dakkoklstoas4jq3rj7wgiv6mmtvk7v7a";
     string testLink2 =
-        "https://ipfs.infura.io/ipfs/bafybohc3gokgtwtxnfwgalh7qftpipwrjlk7lxifwfgrajnvk52q";
+        "https://ipfs.io/ipfs/bafybohc3gokgtwtxnfwgalh7qftpipwrjlk7lxifwfgrajnvk52q";
     string emptyString = "";
 
     struct Stream {
@@ -377,6 +377,8 @@ contract PatreonTest is Test {
         patreon.addProfile(alice, testLink1);
         string memory aliceProfile = patreon.getProfile(alice);
         assertEq(aliceProfile, testLink1);
+        uint256 profileCount = patreon.getProfileCount();
+        assertEq(profileCount, 1);
     }
 
     function testDoubleAddingProfile() public {
@@ -386,24 +388,26 @@ contract PatreonTest is Test {
         assertEq(aliceProfile, testLink2);
         string[] memory profiles = patreon.getAllProfiles();
         assertEq(profiles[0], testLink2);
+        uint256 profileCount = patreon.getProfileCount();
+        assertEq(profileCount, 1);
     }
 
-    function testDeleteProfile() public {
-        patreon.addProfile(alice, testLink1);
+    // function testDeleteProfile() public {
+    //     patreon.addProfile(alice, testLink1);
 
-        vm.prank(alice);
-        patreon.deleteProfile(alice);
-        string memory aliceProfile = patreon.getProfile(alice);
-        assertEq(aliceProfile, emptyString);
+    //     vm.prank(alice);
+    //     patreon.deleteProfile(alice);
+    //     string memory aliceProfile = patreon.getProfile(alice);
+    //     assertEq(aliceProfile, emptyString);
 
-        string[] memory profiles = patreon.getAllProfiles();
-        assertEq(profiles.length, 0);
-    }
+    //     string[] memory profiles = patreon.getAllProfiles();
+    //     assertEq(profiles.length, 0);
+    // }
 
-    function testDeleteProfileRequiresOwner() public {
-        vm.expectRevert(bytes("deleting requires sender to be owner"));
-        patreon.deleteProfile(alice);
-    }
+    // function testDeleteProfileRequiresOwner() public {
+    //     vm.expectRevert(bytes("deleting requires sender to be owner"));
+    //     patreon.deleteProfile(alice);
+    // }
 
     function testGetAllProfiles() public {
         patreon.addProfile(alice, testLink1);
@@ -424,17 +428,17 @@ contract PatreonTest is Test {
         assertEq(address2, bob);
     }
 
-    function testGetAllProfilesAddAfterDelete() public {
-        patreon.addProfile(alice, testLink1);
-        patreon.addProfile(bob, testLink2);
+    // function testGetAllProfilesAddAfterDelete() public {
+    //     patreon.addProfile(alice, testLink1);
+    //     patreon.addProfile(bob, testLink2);
 
-        vm.prank(alice);
-        patreon.deleteProfile(alice);
+    //     vm.prank(alice);
+    //     patreon.deleteProfile(alice);
 
-        patreon.addProfile(alice, testLink1);
-        string[] memory profiles = patreon.getAllProfiles();
-        assertEq(profiles.length, 2);
-    }
+    //     patreon.addProfile(alice, testLink1);
+    //     string[] memory profiles = patreon.getAllProfiles();
+    //     assertEq(profiles.length, 2);
+    // }
 
     //------------------- Helper Functions ------------------- //
 
